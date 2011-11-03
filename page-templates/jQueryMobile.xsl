@@ -68,7 +68,7 @@
     			<xsl:if test="/SAM/page/@id = $myHomePageID"> home</xsl:if>
     			<xsl:if test="$hasSidebar = 'true'"> hasSidebar</xsl:if>
     				
-				<div data-role="page">
+				<div data-role="page" data-add-back-btn="true">
 		
 					<div data-role="header">
 						<xsl:call-template name="persistHeader" />
@@ -109,7 +109,10 @@
 	
 	<xsl:template name="navigation">
 		<nav class="primaryNav">
-			<xsl:call-template name="jqmulNavigation" />
+			<xsl:call-template name="jqmulNavigation">
+				<xsl:with-param name="depth" select="1" />
+				<xsl:with-param name="parent" select="/SAM/page/@id" />
+			</xsl:call-template>
 		</nav>
 	</xsl:template>
 	
