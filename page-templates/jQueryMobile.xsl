@@ -176,18 +176,11 @@
 							<xsl:if test="position() = 1"> first</xsl:if>
 							<xsl:if test="position() = last()"> last</xsl:if>
 						</xsl:attribute>
-						 <xsl:choose>
-								<xsl:when test="@id = /SAM/page/@id and 1=2">
+						 <xsl:call-template name="navigation-link"><xsl:with-param name="suppressPopups" select="$suppressPopups"/>
+							<xsl:with-param name="useLabel">
 								<xsl:value-of select="title" />
-							  </xsl:when>
-							  <xsl:otherwise>
-								<xsl:call-template name="navigation-link"><xsl:with-param name="suppressPopups" select="$suppressPopups"/>
-										<xsl:with-param name="useLabel">
-											<xsl:value-of select="title" />
-										</xsl:with-param>
-									</xsl:call-template>
-							  </xsl:otherwise>
-								</xsl:choose>
+							</xsl:with-param>
+						</xsl:call-template>
 						   
 						<xsl:if test="count(/SAM/page/navigation/breadcrumb[@link-id = current()/@id or $complete = 'true']) &gt; 0 and $depth &gt; 1">
 						   
