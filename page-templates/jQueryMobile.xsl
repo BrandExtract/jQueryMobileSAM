@@ -68,7 +68,7 @@
     			<xsl:if test="/SAM/page/@id = $myHomePageID"> home</xsl:if>
     			<xsl:if test="$hasSidebar = 'true'"> hasSidebar</xsl:if>
     				
-				<div data-role="page" data-add-back-btn="true">
+				<div data-role="page">
 		
 					<div data-role="header">
 						<xsl:call-template name="persistHeader" />
