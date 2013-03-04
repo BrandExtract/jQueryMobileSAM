@@ -26,11 +26,6 @@
 	<xsl:variable name="mySecondaryPageID"><xsl:value-of select="/SAM/page/navigation/breadcrumb[position() = 4]/@link-id" /></xsl:variable>
 	<xsl:variable name="hasSidebar"><xsl:if test="count(/SAM/page/chunk/meta[@name='Content-Group' and value='Sidebar']) &gt; 0">true</xsl:if></xsl:variable>
 
-	<!-- Some configuration variables for the mobile site -->
-	<xsl:variable name="showHeaderOnHome" select="'yes'" /> <!-- Should we show the persistent header on the home page yes/no -->
-	<xsl:variable name="showFooterOnHome" select="'yes'" /> <!-- Should we show the persistent footer on the home page yes/no -->
-	
-	
 	<!-- The entry point for the template -->
 	<xsl:template match="/SAM">
 
@@ -39,12 +34,12 @@
 		<html> 
 		
 			<head>
+
 				<!-- Required meta tags -->
-				<meta charset="utf-8" />
-				<meta name="viewport" content="width=device-width, initial-scale=1" /> 
+				<meta charset="utf-8">
+				<meta name="viewport" content="width=device-width, initial-scale=1"> 
 				
 				<!-- Common meta tags -->
-				<meta name="description" content="" />
 				<meta name="author" content="" />
 				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 				
@@ -57,31 +52,44 @@
 				<!--<link rel="apple-touch-icon" href="/apple-touch-icon.png" />-->
 				
 				<title><xsl:value-of select="/SAM/page/title" disable-output-escaping="yes" /></title>
+				
 				<link rel="stylesheet" href="http://code.jquery.com/mobile/1.0rc2/jquery.mobile-1.0rc2.min.css" />
-				<script src="http://code.jquery.com/jquery-1.6.4.min.js"></script>
+				<!--<link rel="stylesheet" href="/css/jquery.mobile-1.0rc2.min.css" />-->
+				
+				<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+				<script><xsl:text disable-output-escaping="yes"><![CDATA[!window.jQuery && document.write(unescape('%3Cscript src="/js/jquery-1.6.4.min.js"%3E%3C/script%3E'))]]></xsl:text></script>
+				
 				<script src="http://code.jquery.com/mobile/1.0rc2/jquery.mobile-1.0rc2.min.js"></script>
+				<script><xsl:text disable-output-escaping="yes"><![CDATA[!window.jQuery.widget && document.write(unescape('%3Cscript src="/js/jquery.mobile-1.0rc2.min.js"%3E%3C/script%3E'))]]></xsl:text></script>
+
 			</head> 
 		
 			<body> 
 				<!-- Add class names for primary, secondary and active pages. Also adds class for home page and inidcator for if the page has a sidebar -->
+<<<<<<< HEAD
 				<xsl:attribute name="class">p<xsl:value-of select="$myPrimaryPageID" /> p<xsl:value-of select="$mySecondaryPageID" /> p<xsl:value-of select="/SAM/page/@id" /><xsl:if test="/SAM/page/@id = $myHomePageID"> home</xsl:if><xsl:if test="$hasSidebar = 'true'"> hasSidebar</xsl:if></xsl:attribute>
+=======
+				<xsl:attribute name="class">p<xsl:value-of select="$myPrimaryPageID" /> p<xsl:value-of select="$mySecondaryPageID" /> p<xsl:value-of select="/SAM/page/@id" />
+    			<xsl:if test="/SAM/page/@id = $myHomePageID"> home</xsl:if>
+    			<xsl:if test="$hasSidebar = 'true'"> hasSidebar</xsl:if>
+>>>>>>> Update to jQuery Mobile 1.3.0
     				
 				<div data-role="page">
 		
 					<div data-role="header">
-						<xsl:call-template name="persistHeader" />
+						<xsl:call-template name="header" />
 					</div><!-- /header -->
 		
 					<div data-role="content">	
-						<xsl:call-template name="header" />
 						<xsl:call-template name="navigation" />
 						<xsl:call-template name="inline" />
 						<xsl:call-template name="sidebar" />
-						<xsl:call-template name="footer" />
+						
 					</div><!-- /content -->
 		
 					<div data-role="footer">
-						<xsl:call-template name="persistFooter" />
+						<xsl:call-template name="footer" />
+						<xsl:call-template name="footerNav" />
 					</div><!-- /footer -->
 		
 				</div><!-- /page -->
@@ -90,27 +98,14 @@
 		</html>
 	</xsl:template>
 	
-	<xsl:template name="persistHeader">
-		<xsl:if test="/SAM/page/@id != $myHomePageID or $showHeaderOnHome = 'yes'">
-			<!-- Enter content that should appear at the top of every singe page here -->
-			PERSISTENT HEADER
-		</xsl:if>
-	</xsl:template>
-	
 	<xsl:template name="header">
-		<header>
-			<xsl:call-template name="bucket-handler">
-				<xsl:with-param name="bucket-label">Header</xsl:with-param>
-			</xsl:call-template>
-		</header>
 	</xsl:template>
 	
 	<xsl:template name="navigation">
 		<nav class="primaryNav">
-			<xsl:call-template name="jqmulNavigation">
-				<xsl:with-param name="depth" select="1" />
-				<xsl:with-param name="parent" select="/SAM/page/@id" />
-			</xsl:call-template>
+			<div class="pageWidth">
+				<xsl:call-template name="ulNavigation" />
+			</div>
 		</nav>
 	</xsl:template>
 	
@@ -138,65 +133,12 @@
 		</footer>
 	</xsl:template>
 	
-	<xsl:template name="persistFooter">
-		<xsl:if test="/SAM/page/@id != $myHomePageID or $showFooterOnHome = 'yes'">
-			<!-- Enter content that should appear at the bottom of every singe page here -->
-			PERSISTENT FOOTER
-		</xsl:if>
+	<xsl:template name="footerNav">
+		<nav class="leftNav">
+			<xsl:call-template name="ulNavigation">
+				<xsl:with-param name="parent" select="$myPrimaryPageID" />
+				<xsl:with-param name="depth" select="9999" />
+			</xsl:call-template>
+		</nav>
 	</xsl:template>
-	
-	<xsl:template name="jqmulNavigation">
-		<xsl:param name="parent" select="/SAM/page/navigation/breadcrumb[position() = 2]/@link-id"/>
-		<xsl:param name="depth" select="1"/>
-		<xsl:param name="complete" select="false" />
-		<xsl:param name="suppressHidden" select="'false'" />
-		<xsl:param name="suppressPopups" select="false()" />
-		<xsl:param name="sortOrder" select="'ascending'" />
-		<xsl:param name="idPrefix" select="'ulNav'" />
-		<xsl:param name="count" select="0"/>
-		<xsl:param name="alpha" select="0" />
-		<xsl:param name="theme" select="a" />
-		<xsl:if test="count(/SAM/navigation/link[@parent-id = $parent and (@navigable = 1 or /SAM/@directive = 'admin')]) &gt; 0">
-			<xsl:text disable-output-escaping="yes"><![CDATA[<!--googleoff: index -->]]></xsl:text>
-			<ul data-role="listview" data-theme="{$theme}">
-				<xsl:for-each select="/SAM/navigation/link[@parent-id = $parent and (@navigable = 1 or (/SAM/@directive = 'admin' and ($suppressHidden = 'false' or $parent = 47)))]">
-					<xsl:sort select="title[$alpha != 0]" data-type="text" order="ascending" />
-					<xsl:sort select="@sequence[$sortOrder = 'ascending']" data-type="number" order="ascending" />
-					<xsl:sort select="@sequence[$sortOrder = 'descending']" data-type="number" order="descending" />
-					<xsl:if test="$count = 0 or position() &lt;= $count">
-					<li id="{$idPrefix}{@id}">
-						<xsl:attribute name="class">
-							<xsl:choose>
-								<xsl:when test="count(/SAM/page/navigation/breadcrumb[@link-id = current()/@id and position() != last()]) &gt; 0">active ancestor</xsl:when>
-								<xsl:when test="count(/SAM/page/navigation/breadcrumb[@link-id = current()/@id]) &gt; 0">active</xsl:when>
-								<xsl:otherwise></xsl:otherwise>
-							</xsl:choose>
-							<xsl:if test="position() = 1"> first</xsl:if>
-							<xsl:if test="position() = last()"> last</xsl:if>
-						</xsl:attribute>
-						 <xsl:call-template name="navigation-link"><xsl:with-param name="suppressPopups" select="$suppressPopups"/>
-							<xsl:with-param name="useLabel">
-								<xsl:value-of select="title" />
-							</xsl:with-param>
-						</xsl:call-template>
-						   
-						<xsl:if test="count(/SAM/page/navigation/breadcrumb[@link-id = current()/@id or $complete = 'true']) &gt; 0 and $depth &gt; 1">
-						   
-								<xsl:call-template name="ulNavigation">
-								  <xsl:with-param name="parent"><xsl:value-of select="@id" /></xsl:with-param>
-								  <xsl:with-param name="depth"><xsl:value-of select="$depth - 1" /></xsl:with-param>
-								  <xsl:with-param name="complete"><xsl:value-of select="$complete" /></xsl:with-param>
-								  <xsl:with-param name="suppressHidden"><xsl:value-of select="$suppressHidden" /></xsl:with-param>
-								  <xsl:with-param name="sortOrder"><xsl:value-of select="$sortOrder" /></xsl:with-param>
-							  </xsl:call-template>
-						   
-						</xsl:if>
-					</li>
-					</xsl:if>
-				</xsl:for-each>
-			</ul>
-			<xsl:text disable-output-escaping="yes"><![CDATA[<!--googleon: index -->]]></xsl:text>
-		</xsl:if>
-	</xsl:template>
-
 </xsl:stylesheet>
