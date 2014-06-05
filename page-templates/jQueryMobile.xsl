@@ -37,11 +37,10 @@
 
 				<!-- Required meta tags -->
 				<meta charset="utf-8">
-				<meta name="viewport" content="width=device-width, initial-scale=1"> 
+				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 				
 				<!-- Common meta tags -->
 				<meta name="author" content="" />
-				<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 				
 				<!-- These meta keywords and description fields concatenate chunk and page metadata that is defined in SAM -->
 				<meta name="Keywords"><xsl:attribute name="content"><xsl:for-each select="/SAM/page/keywords"><xsl:value-of select="." /></xsl:for-each><xsl:for-each select="/SAM/page/chunk/meta[@name = 'Keywords']"><xsl:value-of select="value" /></xsl:for-each></xsl:attribute></meta>
